@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer app flat v-model="appDrawer" color="info">
+  <v-navigation-drawer app flat v-model="drawer" color="info">
     <template v-slot:prepend>
       <v-list-item two-line>
         <v-list-item-avatar size="100">
@@ -29,7 +29,7 @@
 <script>
 export default {
   name: "Sidebar",
-  props: ["appDrawer"],
+  props: ["adrawer"],
   data() {
     return {
       items: [
@@ -38,6 +38,14 @@ export default {
         { title: "About", icon: "help_outline" }
       ]
     };
+  },
+  computed: {
+    drawer: {
+      get: function() {
+        return this.adrawer;
+      },
+      set: function() {}
+    }
   }
 };
 </script>

@@ -3,14 +3,11 @@
     <v-row fluid justify="center">
       <v-col cols="5">
         <v-list flat>
-          <v-subheader>REPORTS</v-subheader>
+          <v-subheader>TODOS</v-subheader>
           <v-list-item-group color="red">
-            <v-list-item
-              v-for="(item, i) in items"
-              :key="i"
-              @click="item.complete = !item.complete"
-            >
+            <v-list-item v-for="(item, i) in items" :key="i" @click="toggleComplete(item)">
               <v-list-item-icon>
+                <!-- <v-checkbox flat input-value="true" :value="item.complete"></v-checkbox> -->
                 <v-icon v-text="item.complete ? 'check_box' : 'check_box_outline_blank'"></v-icon>
               </v-list-item-icon>
               <v-list-item-content>
@@ -32,19 +29,37 @@ export default {
   data: () => ({
     items: []
   }),
-  created() {
-    db.collection("todo").onSnapshot(res => {
-      const changes = res.docChanges();
-
-      changes.forEach(change => {
-        if (change.type === "added") {
+  methods: {
+    toggleComplete(item) {
+      console.log("toggle complete");
+      const citiesRef = db.collection("todo").doc(item.id);
+      citiesRef
+        .update({
+          complete: !item.complete
+        })
+        .then(() => {
+          this.getAll();
+          console.log("success");
+        });
+    },
+    getAll() {
+      this.items = [];
+      const citiesRef = db.collection("todo");
+      citiesRef.get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          console.log("called get all");
           this.items.push({
-            ...change.doc.data(),
-            id: change.doc.id
+            title: doc.data().title,
+            complete: doc.data().complete,
+            id: doc.id
           });
-        }
+        });
       });
-    });
+    }
+  },
+  created() {
+    console.log("created");
+    return this.getAll();
   }
 };
 </script>

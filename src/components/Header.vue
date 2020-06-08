@@ -20,7 +20,7 @@
       </v-btn>
     </v-toolbar>
 
-    <Sidebar v-bind:appDrawer="drawer" />
+    <Sidebar v-bind:adrawer="drawer" />
   </nav>
 </template>
 
